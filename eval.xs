@@ -3,6 +3,7 @@
 #include "XSUB.h"
 
 int init_done = 0;
+int global = 0;
 
 #if 0
 #define EVIL_EVAL_DEBUG(x) x
@@ -19,7 +20,7 @@ PP(pp_evil_eval) {
     I32 count, c, ax;
 
     hook = Perl_refcounted_he_fetch( PL_curcop->cop_hints_hash, Nullsv, "overload::eval", 14, 0, 0);
-    if ( ! SvPOK( hook ) ) {
+    if ( !( global || SvPOK( hook ) ) ) {
         return real_pp_eval(aTHX);
     }
 
@@ -71,3 +72,8 @@ if ( ! init_done++  ) {
     real_pp_eval = PL_ppaddr[OP_ENTEREVAL];
     PL_ppaddr[OP_ENTEREVAL] = Perl_pp_evil_eval;
 }
+
+void
+evil_eval__global()
+    CODE:
+        global = 1;

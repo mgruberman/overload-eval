@@ -11,9 +11,11 @@ sub import {
     given ($callback) {
         when (/^-(?:p|print)\z/) {
             $^H{'overload::eval'} = 'overload::eval::_print';
+            _global();
         }
         when (/^-(?:pe|print-eval)\z/) {
             $^H{'overload::eval'} = 'overload::eval::_print_eval';
+            _global();
         }
         default { $^H{'overload::eval'} = "$callback" };
     }
@@ -26,7 +28,7 @@ sub unimport {
     return;
 }
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 use XSLoader;
 XSLoader::load( 'overload::eval', $VERSION );
 
@@ -111,7 +113,8 @@ name. This can also be done on the command line.
 
 The C<-print> option prints the source code of the eval() and then
 exits the program. I expect this option is most useful when untangling
-obfuscated programs.
+obfuscated programs. Use of this option changes the pragma so it
+operates globally. B<All> evals are now hooked.
 
 C<-p> is a synonym for C<-print>.
 
@@ -132,7 +135,7 @@ prints the following and exits:
 =item -print-eval
 
 The C<-print-eval> option prints the source code of the eval() before
-running it.
+running it. Use of this option changes the pragma so it operates globally. B<All> evals are now hooked.
 
 C<-pe> is a synonym for C<-print-eval>.
 

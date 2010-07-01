@@ -1,0 +1,14 @@
+Revision history for overload::ref
+
+0.01    Mar 27, 2007
+        First version, released on an unsuspecting world.
+
+0.02    Mar 28, 2007
+        Added the -print import option.
+
+0.03    Mar 28, 2007
+        Fixed a memory leak by mortalizing my return values.
+        Silenced a warning in t/basic.t
+
+0.04    Mar 28, 2007
+        Added the uneval installable program.
