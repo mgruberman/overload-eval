@@ -2,11 +2,22 @@ package overload::eval;
 use strict;
 use warnings;
 use 5.009_000;
+use feature ':5.10';
 
 sub import {
     my ( undef, $callback ) = @_;
+
     $callback //= 'eval';
-    $^H{'overload::eval'} = "$callback";
+    given ($callback) {
+        when (/^-(?:p|print)\z/) {
+            $^H{'overload::eval'} = 'overload::eval::_print';
+        }
+        when (/^-(?:pe|print-eval)\z/) {
+            $^H{'overload::eval'} = 'overload::eval::_print_eval';
+        }
+        default { $^H{'overload::eval'} = "$callback" };
+    }
+
     return;
 }
 
@@ -15,9 +26,19 @@ sub unimport {
     return;
 }
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 use XSLoader;
 XSLoader::load( 'overload::eval', $VERSION );
+
+sub _print {
+    print @_ err die "Can't print: $!";
+    exit;
+}
+
+sub _print_eval {
+    print @_ err die "Can't print: $!";
+    return eval "@_";
+}
 
 q[With great powers come laser eyebeams.];
 
@@ -29,6 +50,12 @@ overload::eval - Hooks the native string eval() function
 
 =head1 SYNOPSIS
 
+As a ocmmand line tool:
+
+  perl -Moverload::eval=-p obfuscated.pl
+
+As a module:
+
   use overload::eval 'my_callback';
   sub my_callback { print and eval for $_[0] }
 
@@ -37,7 +64,7 @@ overload::eval - Hooks the native string eval() function
       tr[A-Za-z][N-ZA-Mn-za-m];
       return $_;
   }
-  eval(rot13('cevag "Uryyb jbeyq!\a"'));
+  eval(rot13());
 
 =head1 DESCRIPTION
 
@@ -70,6 +97,62 @@ function instead of C<eval>.
   sub hook {
       # eval goes here because we declared 'hook'
   }
+
+=head1 BUILTIN-HOOKS
+
+There are some built-in hooks. They are accessed by importing them by
+name. This can also be done on the command line.
+
+=over
+
+=item -p
+
+=item -print
+
+The C<-print> option prints the source code of the eval() and then
+exits the program. I expect this option is most useful when untangling
+obfuscated programs.
+
+C<-p> is a synonym for C<-print>.
+
+The program:
+
+  perl -Moverload::eval=-p obfuscated.pl
+
+when run on:
+
+  $_='cevag "Uryyb jbeyq!\a"';tr/A-Za-z/N-ZA-Mn-za-m/;eval;
+
+prints the following and exits:
+
+  print "Hello world!\n"
+
+=item -pe
+
+=item -print-eval
+
+The C<-print-eval> option prints the source code of the eval() before
+running it.
+
+C<-pe> is a synonym for C<-print-eval>.
+
+The program:
+
+  perl -Moverload::eval=-print-eval obfuscated.pl
+
+when run on:
+
+  $_='cevag "Uryyb jbeyq!\a"';tr/A-Za-z/N-ZA-Mn-za-m/;eval;
+
+prints the following:
+
+  print "Hello world!\n"
+
+and then runs the code which prints:
+
+  Hello world!
+
+=back
 
 =head1 DISPELLING MAGIC
 
