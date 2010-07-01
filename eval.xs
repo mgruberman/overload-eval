@@ -19,7 +19,7 @@ PP(pp_evil_eval) {
     HV* saved_hh = NULL;
     I32 count, c, ax;
 
-    hook = Perl_refcounted_he_fetch( PL_curcop->cop_hints_hash, Nullsv, "overload::eval", 14, 0, 0);
+    hook = Perl_refcounted_he_fetch( aTHX_ PL_curcop->cop_hints_hash, Nullsv, "overload::eval", 14 /* strlen */, 0, 0);
     if ( !( global || SvPOK( hook ) ) ) {
         return real_pp_eval(aTHX);
     }
@@ -43,7 +43,7 @@ PP(pp_evil_eval) {
     XPUSHs(sv);
     PUTBACK;
 
-    count = call_sv( hook, GIMME_V );
+    count = call_sv( aTHX_ hook, GIMME_V );
     SPAGAIN;
     SP -= count;
     ax = (SP - PL_stack_base) + 1;

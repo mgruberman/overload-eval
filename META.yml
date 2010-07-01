@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                overload-eval
-version:             0.06
+version:             0.07
 abstract:            Hooks the native string eval() function
 license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.36_01

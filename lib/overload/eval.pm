@@ -40,7 +40,7 @@ sub _print_eval {
 }
 
 BEGIN {
-    our $VERSION = '0.06';
+    our $VERSION = '0.07';
     XSLoader::load( 'overload::eval', $VERSION );
 }
 
