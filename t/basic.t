@@ -74,7 +74,8 @@ BEGIN { $TESTS += 5 }
     my $context;
     is_deeply( [ eval '(2,3,4,5)' ], [ 2 .. 5 ], 'list context 1' );
     is( $context, 'list', 'list context 2' );
-    is_deeply( [ scalar eval '(2,3,4,5)' ], [5], 'scalar context 1' );
+    is_deeply( [ scalar eval 'no warnings q[void]; (2,3,4,5)' ],
+        [5], 'scalar context 1' );
     is( $context, 'scalar', 'scalar context 2' );
 
     eval '(2,3,4,5)';

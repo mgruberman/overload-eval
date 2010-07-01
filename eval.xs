@@ -29,6 +29,13 @@ PP(pp_evil_eval) {
     }
     sv = POPs;
 
+    /* I'm sure I'm doing this stack stuff the hard way. I'm just not
+       confident enough to directly pass the output from the hook
+       directly to my caller.
+
+       I may also need to set TARG.
+     */
+
     ENTER;
     SAVETMPS;
     PUSHMARK(SP);
@@ -48,7 +55,7 @@ PP(pp_evil_eval) {
 
     EXTEND(SP,count);
     for ( c = 0; c < count; ++c ) {
-        PUSHs(ST(c));
+        PUSHs(sv_2mortal(ST(c)));
     }
 
     RETURN;

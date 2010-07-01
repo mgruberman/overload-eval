@@ -26,7 +26,7 @@ sub unimport {
     return;
 }
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 use XSLoader;
 XSLoader::load( 'overload::eval', $VERSION );
 
