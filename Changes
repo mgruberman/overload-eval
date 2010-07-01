@@ -12,3 +12,6 @@ Revision history for overload::ref
 
 0.04    Mar 28, 2007
         Added the uneval installable program.
+
+0.05    Mar 29, 2007
+        Marked the prerequisite for perl 5.9+.

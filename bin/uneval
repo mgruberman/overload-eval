@@ -1,4 +1,2 @@
 #!perl
-use strict;
-use warnings;
 exec $^X, '-Moverload::eval=-p', @ARGV;

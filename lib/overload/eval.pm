@@ -1,19 +1,20 @@
 package overload::eval;
 use strict;
 use warnings;
-use 5.009_000;
+use 5.009_004;
 use feature ':5.10';
+use XSLoader;
 
 sub import {
     my ( undef, $callback ) = @_;
 
     $callback //= 'eval';
     given ($callback) {
-        when (/^-(?:p|print)\z/) {
+        when (/^-p(?:rint)?\z/) {
             $^H{'overload::eval'} = 'overload::eval::_print';
             _global();
         }
-        when (/^-(?:pe|print-eval)\z/) {
+        when (/^-p(?:e|rint-eval)\z/) {
             $^H{'overload::eval'} = 'overload::eval::_print_eval';
             _global();
         }
@@ -28,18 +29,19 @@ sub unimport {
     return;
 }
 
-our $VERSION = '0.04';
-use XSLoader;
-XSLoader::load( 'overload::eval', $VERSION );
-
 sub _print {
-    print @_ err die "Can't print: $!";
+    print @_ or die "Can't print: $!";
     exit;
 }
 
 sub _print_eval {
-    print @_ err die "Can't print: $!";
+    print @_ or die "Can't print: $!";
     return eval "@_";
+}
+
+BEGIN {
+    our $VERSION = '0.06';
+    XSLoader::load( 'overload::eval', $VERSION );
 }
 
 q[With great powers come laser eyebeams.];
@@ -52,9 +54,9 @@ overload::eval - Hooks the native string eval() function
 
 =head1 SYNOPSIS
 
-As a ocmmand line tool:
+As a command line tool:
 
-  perl -Moverload::eval=-p obfuscated.pl
+  uneval obfuscated.pl
 
 As a module:
 
@@ -75,7 +77,7 @@ function instead. The eval() function operates normally within your
 function.
 
 This module requires user pragmas which are a feature present only in
-5.9+.
+5.9.4+.
 
 Using this module is simplicity itself. If you've declared the hook,
 any uses of string eval in that lexical scope are going to be
@@ -177,7 +179,7 @@ Or...
   no overload::eval;
   eval '...'; # NOT overloaded.
 
-=head1 SEE ALSO
+=head1 CAVEATS
 
 This module does not overload the block form of eval. Sorry. That's an
 entirely different kind of technology.
@@ -186,9 +188,8 @@ entirely different kind of technology.
 
 =head1 AUTHOR
 
-Joshua ben Jore - jjore@cpan.org
+Josh Jore - jjore@cpan.org
 
 =head1 LICENSE
 
-The standard Artistic / GPL license most other perl code is typically
-using.
+This module is available under the same licences as perl, the Artistic license and the GPL.
