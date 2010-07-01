@@ -22,3 +22,7 @@ Revision history for overload::ref
 0.07    Nov 9, 2007
         Fixed for threads. Ought to compile on threaded
         perls now. No promises for being threadsafe.
+
+0.08    Jul 1, 2010
+        - call_sv doesn't accept THX argument
+        - Applied Devel::PPPort
