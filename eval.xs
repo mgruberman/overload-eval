@@ -43,7 +43,7 @@ PP(pp_evil_eval) {
     XPUSHs(sv);
     PUTBACK;
 
-    count = call_sv( aTHX_ hook, GIMME_V );
+    count = call_sv( hook, GIMME_V );
     SPAGAIN;
     SP -= count;
     ax = (SP - PL_stack_base) + 1;
