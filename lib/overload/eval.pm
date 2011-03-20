@@ -48,7 +48,7 @@ sub _global {
 our $init_done;
 sub _install_eval; # Provided by eval.xs
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 XSLoader::load( 'overload::eval', $VERSION );
 _install_eval();
 
