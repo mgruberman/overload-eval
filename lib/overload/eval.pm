@@ -39,10 +39,8 @@ sub _print_eval {
     return eval "@_";
 }
 
-BEGIN {
-    our $VERSION = '0.08';
-    XSLoader::load( 'overload::eval', $VERSION );
-}
+our $VERSION = '0.08';
+XSLoader::load( 'overload::eval', $VERSION );
 
 q[With great powers come laser eyebeams.];
 
