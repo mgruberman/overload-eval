@@ -9,7 +9,7 @@ int is_global() {
 }
 
 OP* (*real_pp_eval)(pTHX);
-PP(pp_evil_eval) { 
+PP(pp_overload_eval) {
     dSP; dTARG;
     SV* hook;
     SV* sv;
@@ -59,7 +59,7 @@ PP(pp_evil_eval) {
     RETURN;
 }
 
-MODULE = overload::eval	PACKAGE = overload::eval PREFIX = evil_eval_
+MODULE = overload::eval	PACKAGE = overload::eval PREFIX = overload_eval_
 
 PROTOTYPES: ENABLE
 
@@ -68,4 +68,4 @@ _install_eval()
     CODE:
         /* Is this a race in threaded perl? */
         real_pp_eval = PL_ppaddr[OP_ENTEREVAL];
-        PL_ppaddr[OP_ENTEREVAL] = Perl_pp_evil_eval;
+        PL_ppaddr[OP_ENTEREVAL] = Perl_pp_overload_eval;
