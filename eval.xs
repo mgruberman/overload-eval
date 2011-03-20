@@ -7,12 +7,6 @@
 int init_done = 0;
 int global = 0;
 
-#if 0
-#define EVIL_EVAL_DEBUG(x) x
-#else
-#define EVIL_EVAL_DEBUG(x)
-#endif
-
 OP* (*real_pp_eval)(pTHX);
 PP(pp_evil_eval) { 
     dSP; dTARG;
