@@ -26,3 +26,11 @@ Revision history for overload::ref
 0.08    Jul 1, 2010
         - call_sv doesn't accept THX argument
         - Applied Devel::PPPort
+
+0.09    Mar 20, 2011
+        - Use v5.13.7+ hinthash API [RT #62904]
+        - Renamed "evil" functions to "overload"
+        - Factored away some C globals
+        - The op hook installer is callable as a regular function
+        - Remove dead code
+        - Build with Dist::Zilla
