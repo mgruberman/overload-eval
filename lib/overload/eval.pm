@@ -39,8 +39,12 @@ sub _print_eval {
     return eval "@_";
 }
 
+our $init_done;
+sub _install_eval; # Provided by eval.xs
+
 our $VERSION = '0.08';
 XSLoader::load( 'overload::eval', $VERSION );
+_install_eval();
 
 q[With great powers come laser eyebeams.];
 

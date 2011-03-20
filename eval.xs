@@ -4,7 +4,6 @@
 #define NEED_sv_2pv_flags
 #include "ppport.h"
 
-int init_done = 0;
 int global = 0;
 
 OP* (*real_pp_eval)(pTHX);
@@ -62,12 +61,13 @@ MODULE = overload::eval	PACKAGE = overload::eval PREFIX = evil_eval_
 
 PROTOTYPES: ENABLE
 
-BOOT:
-if ( ! init_done++  ) {
-    /* Is this a race in threaded perl? */
-    real_pp_eval = PL_ppaddr[OP_ENTEREVAL];
-    PL_ppaddr[OP_ENTEREVAL] = Perl_pp_evil_eval;
-}
+void
+_install_eval()
+    CODE:
+        /* Is this a race in threaded perl? */
+        real_pp_eval = PL_ppaddr[OP_ENTEREVAL];
+        PL_ppaddr[OP_ENTEREVAL] = Perl_pp_evil_eval;
+
 
 void
 evil_eval__global()
