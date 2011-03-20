@@ -16,7 +16,12 @@ PP(pp_overload_eval) {
     HV* saved_hh = NULL;
     I32 count, c, ax;
 
+#if (PERL_VERSION >= 13) && (PERL_SUBVERSION >= 7)
+    hook = cophh_fetch_pvn(PL_curcop->cop_hints_hash, "overload::eval", 14, 0, 0);
+#else
     hook = Perl_refcounted_he_fetch( aTHX_ PL_curcop->cop_hints_hash, Nullsv, "overload::eval", 14 /* strlen */, 0, 0);
+#endif
+
     if ( !( is_global() || SvPOK( hook ) ) ) {
         return real_pp_eval(aTHX);
     }
