@@ -4,7 +4,9 @@
 #define NEED_sv_2pv_flags
 #include "ppport.h"
 
-int global = 0;
+int is_global() {
+    return SvTRUE(get_sv("overload::eval::GLOBAL", 1));
+}
 
 OP* (*real_pp_eval)(pTHX);
 PP(pp_evil_eval) { 
@@ -15,7 +17,7 @@ PP(pp_evil_eval) {
     I32 count, c, ax;
 
     hook = Perl_refcounted_he_fetch( aTHX_ PL_curcop->cop_hints_hash, Nullsv, "overload::eval", 14 /* strlen */, 0, 0);
-    if ( !( global || SvPOK( hook ) ) ) {
+    if ( !( is_global() || SvPOK( hook ) ) ) {
         return real_pp_eval(aTHX);
     }
 
@@ -67,9 +69,3 @@ _install_eval()
         /* Is this a race in threaded perl? */
         real_pp_eval = PL_ppaddr[OP_ENTEREVAL];
         PL_ppaddr[OP_ENTEREVAL] = Perl_pp_evil_eval;
-
-
-void
-evil_eval__global()
-    CODE:
-        global = 1;

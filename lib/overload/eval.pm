@@ -5,6 +5,8 @@ use 5.009_004;
 use feature ':5.10';
 use XSLoader;
 
+our $GLOBAL = 0;
+
 sub import {
     my ( undef, $callback ) = @_;
 
@@ -37,6 +39,10 @@ sub _print {
 sub _print_eval {
     print @_ or die "Can't print: $!";
     return eval "@_";
+}
+
+sub _global {
+    $GLOBAL = 1;
 }
 
 our $init_done;
